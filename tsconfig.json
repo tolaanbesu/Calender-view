@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    }
+  },
+  "include": [
+    "src",
+    ".storybook",
+    "**/*.d.ts"
+  ]
+}
+
+
+// {
+//   "files": [],
+//   "references": [
+//     { "path": "./tsconfig.app.json" },
+//     { "path": "./tsconfig.node.json" }
+//   ]
+// }
