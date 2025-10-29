@@ -216,7 +216,6 @@ export const EventModal: React.FC<EventModalProps> = memo(({
                   style={{
                     backgroundColor: c.hex,
                     borderColor: formData.color === c.hex ? c.hex : "transparent",
-                    ringColor: c.hex,
                   }}
                   aria-checked={formData.color === c.hex}
                   role="radio"
