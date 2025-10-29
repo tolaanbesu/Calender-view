@@ -1,73 +1,83 @@
 # React + TypeScript + Vite
+📘README – Calendar View
+🗓Overview
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The Calendar View project is a modern React(vite) + TailWind + TypeScript application that provides an interactive scheduling and event management interface.
+It includes Month and Week views, dynamic event creation, editing, and deletion with a responsive design built using TailwindCSS and Lucide icons.
 
-Currently, two official plugins are available:
+🧩Folder Structure
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+calendar-view/
+├── .storybook/                  # Storybook setup for component previews
+│   ├── main.ts
+│   └── preview.ts
+│
+├── src/
+│   ├── components/
+│   │   ├── Calendar/
+│   │   │   ├── CalendarView.tsx         # Main Calendar container (switches between Week & Month)
+│   │   │   ├── CalendarView.types.ts    # Type definitions (CalendarEvent, Props, etc.)
+│   │   │   ├── EventModal.tsx           # Modal for creating/editing events
+│   │   │   ├── MonthView.tsx            # Monthly grid view
+│   │   │   ├── WeekView.tsx             # Weekly detailed timeline view
+│   │   │   ├── *.stories.tsx            # Storybook component previews
+│   │   │   └── CalendarCell.tsx         # (Optional) reusable day cell component
+│   │   │
+│   │   ├── primitives/                  # Base reusable UI components
+│   │   │   ├── Button.tsx               # Reusable styled button
+│   │   │   ├── Modal.tsx                # Generic modal component
+│   │   │   ├── Select.tsx               # Styled dropdown selector
+│   │   │   ├── *.stories.tsx            # Storybook demos for each primitive
+│   │   │
+│   │   ├── WeekViewComponents/          # Smaller modular parts of the week grid
+│   │   │   ├── EventItem.tsx            # Event block in the timeline
+│   │   │   ├── NowLine.tsx              # Red “Now” indicator line
+│   │   │   ├── TimeSlot.tsx             # Hour block element
+│   │   │   └── WeekDayHeader.tsx        # Day headers (Sun–Sat)
+│   │
+│   ├── data/
+│   │   └── mockEvents.ts                # Sample events for local testing
+│   │
+│   ├── hooks/
+│   │   ├── useEventManager.ts           # Manages CRUD logic for events
+│   │   └── useKeyboardDrag.ts           # Handles drag & keyboard navigation (if added)
+│   │
+│   ├── styles/
+│   │   └── globals.css                  # Tailwind base and global styles
+│   │
+│   ├── utils/
+│   │   ├── date.utils.ts                # Date helpers (startOfWeek, isSameDay, etc.)
+│   │   ├── class.utils.ts               # Conditional class merging
+│   │   └── event.utils.ts               # Event-related helper logic
+│   │
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.html
+│
+├── package.json
+├── tailwind.config.js
+├── tsconfig.json
+├── eslint.config.js
+└── README.md
 
-## React Compiler
+Component           Description                                                                     
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+CalendarView.tsx    Main container managing navigation, mode switching, and event state.            
+MonthView.tsx       Displays days of the current month with event previews.                         
+WeekView.tsx        Displays the week timeline with hours, events, and a dynamic “Now” line.        
+EventModal.tsx      Modal to add, edit, or delete events.                                           
+primitives          Reusable low-level UI components (Button, Modal, Select) for consistent design. 
+hooks               Custom hooks to encapsulate logic like event management and interactions.  
 
-## Expanding the ESLint configuration
+⚙️Technologies Used
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+React 18 + TypeScript
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Tailwind CSS (custom config)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Lucide-react (icons)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Storybook for UI testing
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Vite or Next.js compatible structure     
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```

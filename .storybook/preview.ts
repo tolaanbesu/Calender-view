@@ -1,6 +1,4 @@
-
 import '../src/styles/globals.css';
-
 
 const preview = {
   parameters: {
