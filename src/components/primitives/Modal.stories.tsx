@@ -3,7 +3,6 @@ import { Modal } from './Modal';
 import { Button } from './Button';
 import React, { useState } from 'react';
 
-// Define the base props interface for clarity
 interface ModalProps {
     open: boolean;
     onClose: () => void;
@@ -29,13 +28,10 @@ const meta: Meta<typeof Modal> = {
 export default meta;
 type Story = StoryObj<typeof Modal>;
 
-// This component wraps the Modal to manage its state for interaction testing
-// We only omit 'open', ensuring 'onClose' is available in args.
 const ModalWrapper = (args: Omit<ModalProps, 'open'>) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleClose = () => {
     setIsOpen(false);
-    // onClose is now correctly included in args
     args.onClose(); 
   };
 

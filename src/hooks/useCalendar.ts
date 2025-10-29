@@ -9,9 +9,7 @@ import {
 import { ViewMode } from "../components/Calendar/CalendarView.types";
 
 /**
- * useCalendar Hook
- * Handles all core calendar state: current date, view mode, and navigation.
- * This centralizes date-related logic for better separation of concerns.
+Handles all core calendar state: current date, view mode, and navigation.
  */
 export const useCalendar = (initialDate: Date = new Date()) => {
   const [currentDate, setCurrentDate] = useState(initialDate);
@@ -41,12 +39,10 @@ export const useCalendar = (initialDate: Date = new Date()) => {
     setViewMode(mode);
   }, []);
 
-  // Format the header title (e.g., "October 2025" or "Oct 27 - Nov 2, 2025")
   const headerTitle = useMemo(() => {
     if (viewMode === "month") {
       return format(currentDate, "MMMM yyyy");
     }
-    // For Week View, calculate the start and end of the current week
     const start = subWeeks(currentDate, 0);
     const end = addWeeks(start, 1);
     const startOfWeek = format(start, "MMM d");

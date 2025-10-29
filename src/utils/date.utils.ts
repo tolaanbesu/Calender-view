@@ -1,6 +1,5 @@
 /**
- * Date Utility Wrappers for date-fns.
- * This abstracts date-fns usage and allows for easy swapping or version updates,
+ Date Utility Wrappers for date-fns.
  */
 import {startOfWeek as dfnStartOfWeek,
       endOfWeek as dfnEndOfWeek,

@@ -7,7 +7,6 @@ const options: SelectOption[] = [
   { label: "Option 2", value: "2", disabled: true },
 ];
 
-// Default export with component metadata
 const meta: Meta<typeof Select> = {
   title: "Primitives/Select",
   component: Select,
@@ -15,7 +14,6 @@ const meta: Meta<typeof Select> = {
 
 export default meta;
 
-// Named stories
 export const Default: StoryObj<typeof Select> = {
   args: {
     options: options,

@@ -59,40 +59,68 @@ export const WeekView: React.FC<WeekViewProps> = memo(({ currentDate, events, op
 
   return (
     <div className="flex flex-col border border-neutral-300 shadow-2xl rounded-xl overflow-hidden bg-white h-full max-h-[calc(100vh-120px)]">
+  <div className="overflow-x-auto">
+    <div className="min-w-[700px]">
+      {/* Week header */}
       <div className="grid grid-cols-[50px_repeat(7,minmax(0,1fr))] border-b border-neutral-300 bg-neutral-50/70 sticky top-0 z-20">
         <div className="p-2 border-r border-neutral-200" />
-        {days.map(day => <WeekDayHeader key={format(day, "d")} day={day} today={today} />)}
+        {days.map(day => (
+          <WeekDayHeader key={format(day, "d")} day={day} today={today} />
+        ))}
       </div>
 
-      <div className="flex-1 overflow-y-auto">
-        <div className="grid grid-cols-[50px_repeat(7,minmax(0,1fr))]">
-          <div className="sticky left-0 bg-white z-20">
-            {hours.map(hour => (
-              <div key={format(hour, "HH")} className="h-[60px] pr-2 text-right text-xs text-neutral-500 pt-[-6px]" aria-hidden="true">
-                {format(hour, "h a")}
-              </div>
-            ))}
-          </div>
-
-          {days.map(day => {
-            const dayEvents = getEventsForDay(day);
-            const isTodayColumn = isSameDay(day, today);
-
-            return (
-              <div key={format(day, "yyyy-MM-dd")} className={cn("relative border-l border-neutral-200 min-h-[1440px]", "border-r border-neutral-200")}>
-                {hours.map(hour => <TimeSlot key={format(hour, "HH")} day={day} hour={hour} openModal={openModal} />)}
-                {isTodayColumn && <NowLine nowOffset={nowOffset} />}
-                {dayEvents.map(ev => (
-                  <EventItem key={ev.id} event={ev} openModal={openModal} getEventStyle={getEventStyle} setActiveEvent={setActiveEvent} EventHandlers={EventHandlers} />
-                ))}
-              </div>
-            );
-          })}
+      {/* Calendar body */}
+      <div className="grid grid-cols-[50px_repeat(7,minmax(0,1fr))]">
+        {/* Time labels */}
+        <div className="sticky left-0 bg-white z-20">
+          {hours.map(hour => (
+            <div
+              key={format(hour, "HH")}
+              className="h-[60px] pr-1 sm:pr-2 text-right text-[10px] sm:text-xs text-neutral-500 flex items-start justify-end"
+              aria-hidden="true"
+            >
+              {format(hour, "h a")}
+            </div>
+          ))}
         </div>
-      </div>
 
-      <div aria-live="polite" className="sr-only">{announceMsg}</div>
+        {/* Day columns */}
+        {days.map(day => {
+          const dayEvents = getEventsForDay(day);
+          const isTodayColumn = isSameDay(day, today);
+
+          return (
+            <div
+              key={format(day, "yyyy-MM-dd")}
+              className={cn("relative border-l border-neutral-200 min-h-[1440px]", "border-r border-neutral-200")}
+            >
+              {hours.map(hour => (
+                <TimeSlot key={format(hour, "HH")} day={day} hour={hour} openModal={openModal} />
+              ))}
+
+              {isTodayColumn && <NowLine nowOffset={nowOffset} />}
+
+              {dayEvents.map(ev => (
+                <EventItem
+                  key={ev.id}
+                  event={ev}
+                  openModal={openModal}
+                  getEventStyle={getEventStyle}
+                  setActiveEvent={setActiveEvent}
+                  EventHandlers={EventHandlers}
+                />
+              ))}
+            </div>
+          );
+        })}
+      </div>
     </div>
+  </div>
+
+  <div aria-live="polite" className="sr-only">{announceMsg}</div>
+</div>
+
+
   );
 });
 

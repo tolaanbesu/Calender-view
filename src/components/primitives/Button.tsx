@@ -4,7 +4,6 @@ import { cn } from "../../utils/class.utils";
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "danger" | "outline";
   size?: "sm" | "md" | "lg";
-  // Added aria-label for accessibility on icon-only buttons
   "aria-label"?: string; 
 }
 
@@ -19,7 +18,6 @@ export const Button: React.FC<ButtonProps> = memo(({
   const base =
     "font-medium rounded-lg transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm";
   
-  // Adjusted colors to be more aligned with SaaS blue/gray standard
   const variants: Record<string, string> = {
     primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500/50",
     secondary:

@@ -28,10 +28,17 @@ export const EventItem: React.FC<EventItemProps> = ({ event, openModal, getEvent
     </div>
 
     {event.description && (
-      <div className="absoluteleft-1/2 -translate-x-1/2 bottom-full mb-2 bg-white text-gray-900 text-[12px] p-2 
-                    rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50 max-w-md whitespace-normal break-words">
-        {event.description}
-    </div>
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 
+            bg-gray-800 text-white 
+            text-sm p-3 
+            shadow-2xl shadow-indigo-500/50 
+            opacity-0 group-hover:opacity-100 transition-opacity duration-300 
+            pointer-events-none z-[500] 
+            max-w-xs whitespace-normal break-words rounded-lg border border-indigo-400">
+    <strong className="block mb-1 text-indigo-300">Event Highlight:</strong>
+    {event.description}
+    
+</div>
 
     )}
   </div>

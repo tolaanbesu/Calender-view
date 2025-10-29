@@ -9,11 +9,11 @@ import {EventModalProps} from "./CalendarView.types"
 
 // Default event for new creation
 const defaultEvent: CalendarEvent = {
-  id: "", // Will be assigned by useEventManager if new
+  id: "", 
   title: "",
   startDate: new Date(),
   endDate: new Date(),
-  color: "#1D4ED8", // Default blue-700
+  color: "#1D4ED8", 
 };
 
 // Converts Date object to datetime-local string (YYYY-MM-DDThh:mm)
@@ -84,9 +84,8 @@ export const EventModal: React.FC<EventModalProps> = memo(({
 
 
   const handleSave = useCallback(() => {
-    // Basic validation
+    // validation
     if (!formData.title.trim() || !formData.startDateInput || !formData.endDateInput) {
-      // In a real app, display an error message
       alert("Title and dates are required.");
       return;
     }
@@ -100,15 +99,10 @@ export const EventModal: React.FC<EventModalProps> = memo(({
     const endHour = end.getHours();
     const endMinute = end.getMinutes();
 
-    // Compare total minutes
     if (startHour * 60 + startMinute >= endHour * 60 + endMinute) {
       alert("End time must be after start time.");
       return;
     }
-
-
-
-
 
     const eventToSave: CalendarEvent = {
         id: formData.id || crypto.randomUUID(),
@@ -127,7 +121,6 @@ export const EventModal: React.FC<EventModalProps> = memo(({
         onDelete(event.id);
     }
   }, [event, onDelete]);
-
 
   const colorOptions = useMemo(() => [
     { hex: "#1D4ED8", name: "Blue" }, 
