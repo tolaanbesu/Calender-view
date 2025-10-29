@@ -1,178 +1,99 @@
-//src/components/Calendar/WeekView.tsx
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { CalendarEvent } from "./CalendarView.types";
-import { startOfWeek, isSameDay } from "../../utils/date.utils";
+import React, { memo, useMemo, useCallback, useState, useEffect } from "react";
+import { WeekViewProps, CalendarEvent } from "../Calendar/CalendarView.types";
+import { startOfWeek, setTime, eachHour, format, isSameDay, isWithin } from "../../utils/date.utils";
+import { cn } from "../../utils/class.utils";
+import { useKeyboardDrag } from "../../hooks/useKeyboardDrag";
+import { WeekDayHeader } from "../WeekviewComponents/WeekDayHeader";
+import { TimeSlot } from "../WeekviewComponents/TimeSlot";
+import { EventItem } from "../WeekviewComponents/EventItem";
+import { NowLine } from "../WeekviewComponents/NowLine";
 
-interface WeekViewProps {
-  currentDate: Date;
-  events: CalendarEvent[];
-  openModal: (event?: CalendarEvent) => void;
-}
+const HOURS_IN_DAY = 24;
+const MINUTES_IN_HOUR = 60;
+const ROW_HEIGHT = 60;
 
-export const WeekView: React.FC<WeekViewProps> = ({
-  currentDate,
-  events,
-  openModal,
-}) => {
+export const WeekView: React.FC<WeekViewProps> = memo(({ currentDate, events, openModal }) => {
   const getNowOffset = useCallback(() => {
     const now = new Date();
-    const currentHours = now.getHours()+now.getMinutes()/60;
-    return (currentHours)*4;
+    const currentMinutes = now.getHours() * MINUTES_IN_HOUR + now.getMinutes();
+    return (currentMinutes / MINUTES_IN_HOUR) * ROW_HEIGHT;
   }, []);
 
   const [nowOffset, setNowOffset] = useState(getNowOffset());
   const today = useMemo(() => new Date(), []);
+  const weekStart = useMemo(() => startOfWeek(currentDate), [currentDate]);
 
   useEffect(() => {
     const interval = setInterval(() => setNowOffset(getNowOffset()), 60000);
     return () => clearInterval(interval);
   }, [getNowOffset]);
 
-  const start = startOfWeek(currentDate);
-  const days = useMemo(() => {
-    return Array.from({ length: 7 }, (_, i) => {
-      const d = new Date(start);
-      d.setDate(start.getDate() + i);
-      d.setHours(0, 0, 0, 0);
-      return d;
-    });
-  }, [start]);
+  const days = useMemo(() => Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(weekStart);
+    d.setDate(weekStart.getDate() + i);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }), [weekStart]);
 
-  const getEventStyle = (ev: CalendarEvent) => {
-    const startH = ev.startDate.getHours() + ev.startDate.getMinutes() / 60;
-    const endH = ev.endDate.getHours() + ev.endDate.getMinutes() / 60;
-    const height = Math.max((endH - startH) * 4, 0.5);
+  const hours = useMemo(() => {
+    const startHour = setTime(today, 0, 0);
+    const endHour = setTime(today, HOURS_IN_DAY - 1, 0);
+    return eachHour(startHour, endHour);
+  }, [today]);
 
-    return {
-      top: `${startH * 4}rem`,
-      height: `${height}rem`,
-      backgroundColor: ev.color || "#0ea5e9",
-      left: "4px",
-      right: "4px",
-      width: "calc(100% - 8px)",
-    } as React.CSSProperties;
-  };
+  const getEventStyle = useCallback((event: CalendarEvent) => {
+    const startTimeInMinutes = event.startDate.getHours() * 60 + event.startDate.getMinutes();
+    const durationInMinutes = Math.max(15, (event.endDate.getTime() - event.startDate.getTime()) / (1000 * 60));
+    const top = (startTimeInMinutes / MINUTES_IN_HOUR) * ROW_HEIGHT;
+    const height = (durationInMinutes / MINUTES_IN_HOUR) * ROW_HEIGHT;
+    return { top: `${top}px`, height: `${height}px`, backgroundColor: event.color, zIndex: 10 };
+  }, []);
 
-  const hours = Array.from({ length: 24 }, (_, i) => i);
+  const getEventsForDay = useCallback((day: Date) => {
+    return events
+      .filter(e => isWithin(day, e.startDate, e.endDate) || isSameDay(day, e.startDate) || isSameDay(day, e.endDate))
+      .sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
+  }, [events]);
+
+  const { setActiveEvent, EventHandlers, announceMsg } = useKeyboardDrag();
 
   return (
-    <div className="flex flex-col border border-neutral-300 rounded-xl shadow-xl overflow-hidden bg-white max-h-[calc(100vh-160px)]">
-      {/* Headers */}
-      <div className="grid grid-cols-7 border-b border-neutral-300 bg-neutral-50 sticky top-0 z-20 ml-16">
-        {days.map((day, i) => {
-          const isToday = isSameDay(day, today);
-          return (
-            <div
-              key={i}
-              className={`p-2 text-center border-r border-neutral-200 ${
-                isToday ? "bg-red-50" : "hover:bg-neutral-100"
-              }`}
-            >
-              <span className="text-sm font-semibold text-neutral-700 block">
-                {day.toLocaleDateString([], { weekday: "short" })}
-              </span>
-              <span
-                className={`block text-xl font-bold ${
-                  isToday ? "text-red-600" : "text-neutral-900"
-                }`}
-              >
-                {day.getDate()}
-              </span>
-            </div>
-          );
-        })}
+    <div className="flex flex-col border border-neutral-300 shadow-2xl rounded-xl overflow-hidden bg-white h-full max-h-[calc(100vh-120px)]">
+      <div className="grid grid-cols-[50px_repeat(7,minmax(0,1fr))] border-b border-neutral-300 bg-neutral-50/70 sticky top-0 z-20">
+        <div className="p-2 border-r border-neutral-200" />
+        {days.map(day => <WeekDayHeader key={format(day, "d")} day={day} today={today} />)}
       </div>
 
-      {/* Grid */}
-      <div className="flex overflow-y-auto flex-grow">
-        <div className="w-16 flex-shrink-0 border-r border-neutral-300 text-xs text-neutral-500 bg-neutral-50 sticky left-0 z-30">
-          {hours.map((h) => (
-            <div
-              key={h}
-              className="h-16 border-b border-neutral-200 text-right pr-2 text-[11px] font-medium relative"
-            >
-              <span className="absolute bottom-[-8px] right-2">
-                {new Date(0, 0, 0, h).toLocaleTimeString([], {
-                  hour: "numeric",
-                  hour12: true,
-                })}
-              </span>
-            </div>
-          ))}
-        </div>
+      <div className="flex-1 overflow-y-auto">
+        <div className="grid grid-cols-[50px_repeat(7,minmax(0,1fr))]">
+          <div className="sticky left-0 bg-white z-20">
+            {hours.map(hour => (
+              <div key={format(hour, "HH")} className="h-[60px] pr-2 text-right text-xs text-neutral-500 pt-[-6px]" aria-hidden="true">
+                {format(hour, "h a")}
+              </div>
+            ))}
+          </div>
 
-        {/* Day Columns */}
-        <div className="flex-1 grid grid-cols-7 relative">
-          {days.map((day) => {
-            const isToday = isSameDay(day, today);
-            const dayEvents = events.filter((e) =>
-              isSameDay(e.startDate, day)
-            );
+          {days.map(day => {
+            const dayEvents = getEventsForDay(day);
+            const isTodayColumn = isSameDay(day, today);
 
             return (
-              <div
-                key={day.toISOString()}
-                className={`border-r border-neutral-200 relative min-h-[96rem] ${
-                  isToday ? "bg-red-50/10" : "bg-white"
-                }`}
-                onClick={() =>
-                  openModal()
-                }
-              >
-                {hours.map((h) => (
-                  <div
-                    key={h}
-                    className="h-16 border-b border-dashed border-neutral-100"
-                  />
-                ))}
-
-                {/* Now Line */}
-                {isToday && (
-                  <div
-                    className="absolute left-0 right-0 h-[2px] bg-red-600 z-50"
-                    style={{ top: `${nowOffset}rem` }}
-                  >
-                    <div className="absolute -left-1.5 -top-1.5 w-3 h-3 rounded-full bg-red-600" />
-                    <span className="absolute -top-2 left-4 text-[10px] text-red-600 font-semibold bg-white px-1 rounded shadow-md">
-                      Now
-                    </span>
-                  </div>
-                )}
-
-                {/* Events */}
-                {dayEvents.map((ev) => (
-                  <div
-                    key={ev.id}
-                    className="absolute text-xs rounded-md text-white p-1 cursor-pointer overflow-hidden shadow-sm"
-                    style={getEventStyle(ev)}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openModal(ev);
-                    }}
-                  >
-                    <div className="font-semibold truncate text-[12px]">
-                      {ev.title || "(No title)"}
-                    </div>
-                    <div className="text-[10px] opacity-90">
-                      {ev.startDate.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: true,
-                      })}{" "}
-                      -{" "}
-                      {ev.endDate.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: true,
-                      })}
-                    </div>
-                  </div>
+              <div key={format(day, "yyyy-MM-dd")} className={cn("relative border-l border-neutral-200 min-h-[1440px]", "border-r border-neutral-200")}>
+                {hours.map(hour => <TimeSlot key={format(hour, "HH")} day={day} hour={hour} openModal={openModal} />)}
+                {isTodayColumn && <NowLine nowOffset={nowOffset} />}
+                {dayEvents.map(ev => (
+                  <EventItem key={ev.id} event={ev} openModal={openModal} getEventStyle={getEventStyle} setActiveEvent={setActiveEvent} EventHandlers={EventHandlers} />
                 ))}
               </div>
             );
           })}
         </div>
       </div>
+
+      <div aria-live="polite" className="sr-only">{announceMsg}</div>
     </div>
   );
-};
+});
+
+WeekView.displayName = "WeekView";

@@ -1,43 +1,48 @@
-export const startOfWeek = (date: Date) =>{
-    const d = new Date(date);
-    const day = d.getDay();
-    const diff = d.getDate()-day;
-    const start = new Date(d.getFullYear(),d.getMonth(),diff)
-    start.setHours(0,0,0,0)
-    return start;
-}
-export const endOfWeek = (date: Date) =>{
-    const day = date.getDay();
-    const result = new Date(date);
-    result.setDate(date.getDate() + (6 - day));
-    result.setHours(23,59,59,999)
-    return result;
-}
+/**
+ * Date Utility Wrappers for date-fns.
+ * This abstracts date-fns usage and allows for easy swapping or version updates,
+ */
+import {startOfWeek as dfnStartOfWeek,
+      endOfWeek as dfnEndOfWeek,
+      startOfMonth as dfnStartOfMonth,
+      endOfMonth as dfnEndOfMonth,
+      addMonths as dfnAddMonths,
+      subMonths as dfnSubMonths,
+      addWeeks as dfnAddWeeks,
+      subWeeks as dfnSubWeeks,
+      format as dfnFormat,
+      isSameDay as dfnIsSameDay,
+      isSameMonth as dfnIsSameMonth,
+      isToday as dfnIsToday,
+      isBefore as dfnIsBefore,
+      isAfter as dfnIsAfter,
+      getUnixTime as dfnGetUnixTime,
+      getDay as dfnGetDay,
+      set as dfnSet,
+      eachHourOfInterval,
+      isPast,
+      isWithinInterval,
+} from "date-fns";
 
-export  const isSameDay = (d1: Date, d2: Date) =>
-    d1.getFullYear() === d2.getFullYear() &&
-    d1.getMonth() === d2.getMonth() &&
-    d1.getDate() === d2.getDate();
-    
+const OPTIONS = { weekStartsOn: 0 } as const; // Sunday start for the week
 
-export const getCalendarGrid = (date:Date): Date[] =>{
-    const year = date.getFullYear();
-    const month = date.getMonth();
-
-    const firstOfMonth = new Date(year, month, 1);
-    const gridStart = startOfWeek(firstOfMonth);
-
-
-    const totalDays = 42;
-
-    const dates: Date[] = [];
-    const current = new Date(gridStart);
-
-    for(let i=0; i<totalDays; i++){
-        dates.push(new Date(current));
-        current.setDate(current.getDate()+1)
-    }
-
-    return dates;
-}
-
+export const startOfWeek = (date: Date): Date => dfnStartOfWeek(date, OPTIONS);
+export const endOfWeek = (date: Date): Date => dfnEndOfWeek(date, OPTIONS);
+export const startOfMonth = (date: Date): Date => dfnStartOfMonth(date);
+export const endOfMonth = (date: Date): Date => dfnEndOfMonth(date);
+export const addMonths = (date: Date, amount: number): Date =>dfnAddMonths(date, amount);
+export const subMonths = (date: Date, amount: number): Date =>dfnSubMonths(date, amount);
+export const addWeeks = (date: Date, amount: number): Date =>dfnAddWeeks(date, amount);
+export const subWeeks = (date: Date, amount: number): Date =>dfnSubWeeks(date, amount);
+export const format = (date: Date, fmt: string): string => dfnFormat(date, fmt);
+export const isSameDay = (date1: Date, date2: Date): boolean =>dfnIsSameDay(date1, date2);
+export const isSameMonth = (date1: Date, date2: Date): boolean =>dfnIsSameMonth(date1, date2);
+export const isToday = (date: Date): boolean => dfnIsToday(date);
+export const isBefore = (date1: Date, date2: Date): boolean => dfnIsBefore(date1, date2);
+export const isAfter = (date1: Date, date2: Date): boolean =>dfnIsAfter(date1, date2);
+export const getUnixTime = (date: Date): number => dfnGetUnixTime(date);
+export const getDay = (date: Date): number => dfnGetDay(date);
+export const setTime = (date: Date, hours: number, minutes: number): Date =>dfnSet(date, { hours, minutes, seconds: 0, milliseconds: 0 });
+export const eachHour = (start: Date, end: Date): Date[] =>eachHourOfInterval({ start, end });
+export const isPastDate = (date: Date): boolean => isPast(date);
+export const isWithin = (date: Date, start: Date, end: Date): boolean =>isWithinInterval(date, { start, end });

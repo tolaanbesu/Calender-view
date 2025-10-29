@@ -1,4 +1,5 @@
-export interface CalendarEvent {
+//data type for event
+export interface CalendarEvent{
     id: string;
     title: string;
     description?: string;
@@ -8,20 +9,48 @@ export interface CalendarEvent {
     category?: string;
 }
 
-export interface CalendarViewProps {
+export type ViewMode = "month" | "week";
+
+//expected props(properties) for calendarView component
+export interface CalendarViewProps{
     events: CalendarEvent[];
     onEventAdd: (event: CalendarEvent) =>void;
     onEventUpdate: (id: string, updates: Partial<CalendarEvent>) => void;
     onEventDelete: (id:string) => void;
-    initialView?: 'month' | 'week';
+    initialView?: ViewMode;
     initialDate?: Date;
 }
 
-export interface EventModalProps {
+//expected props for EventModal component
+export interface EventModalProps{
   open: boolean;
-  event?: CalendarEvent | null;
+  event?: CalendarEvent;
   onClose: () => void;
-  onSave: (event: CalendarEvent) => void;
-  onDelete?: (id: string) => void;
-  selectedDate?: Date| null;
+  onSave: (e: CalendarEvent) => void;
+  onDelete: (id: string) => void;
+  isLoading: boolean;
 }
+
+export interface CalendarCellProps {
+  date: Date;
+  events: CalendarEvent[];
+  isToday: boolean;
+  isCurrentMonth: boolean;
+  onClick: (date: Date) => void;
+  openModal?: (event?: CalendarEvent) => void; // optional: opens modal for event or date
+}
+
+export interface MonthViewProps {
+  currentDate: Date;
+  events: CalendarEvent[];
+  onDateClick: (date: Date) => void;
+  openModal: (event?: CalendarEvent) => void;
+}
+
+export interface WeekViewProps {
+  currentDate: Date;
+  events: CalendarEvent[];
+  openModal: (event?: CalendarEvent) => void;
+}
+
+
