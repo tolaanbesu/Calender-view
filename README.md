@@ -1,75 +1,60 @@
 # React + TypeScript + Vite
 📘README – Calendar View
-🗓Overview
+# Calendar View Component
 
-The Calendar View project is a modern React(vite) + TailWind + TypeScript application that provides an interactive scheduling and event management interface.
-It includes Month and Week views, dynamic event creation, editing, and deletion with a responsive design built using TailwindCSS and Lucide icons.
+##  Live Storybook  
+[Your Deployed Storybook URL]  
 
-🧩Folder Structure
+##  Installation  
+```bash
+npm install
+npm run storybook
 
-calendar-view/
-.storybook/                  # Storybook setup for component previews
-    main.ts
-    preview.ts
-src/
-    components/
-      Calendar/
-            CalendarView.tsx         # Main Calendar container (switches between Week & Month)
-            CalendarView.types.ts    # Type definitions (CalendarEvent, Props, etc.)
-            EventModal.tsx           # Modal for creating/editing events
-            MonthView.tsx            # Monthly grid view
-            WeekView.tsx             # Weekly detailed timeline view
-            *.stories.tsx            # Storybook component previews
-             CalendarCell.tsx         # reusable day cell component
-      primitives/                  # Base reusable UI components
-             Button.tsx               # Reusable styled button
-             Modal.tsx                # Generic modal component
-             Select.tsx               # Styled dropdown selector
-           *.stories.tsx            # Storybook demos for each primitive
-      WeekViewComponents/          # Smaller modular parts of the week grid
-            EventItem.tsx            # Event block in the timeline
-            NowLine.tsx              # Red “Now” indicator line
-            TimeSlot.tsx             # Hour block element
-            WeekDayHeader.tsx        # Day headers (Sun–Sat)
-    data/
-       mockEvents.ts                # Sample events for local testing
-    hooks/
-       useEventManager.ts           # Manages CRUD logic for events
-       useKeyboardDrag.ts           # Handles drag & keyboard navigation (if added)
-    styles/
-       globals.css                  # Tailwind base and global styles
-    utils/
-      date.utils.ts                # Date helpers (startOfWeek, isSameDay, etc.)
-      class.utils.ts               # Conditional class merging
-      event.utils.ts               # Event-related helper logic
-    App.tsx
-    main.tsx
-    index.html
+## Architecture
+The Calendar View component is built using React + TypeScript and structured into modular components:
 
-package.json
-tailwind.config.js
-tsconfig.json
-eslint.config.js
-README.md
+CalendarView – main container handling state, navigation, and view mode (month/week).
 
-Component           Description                                                                     
+MonthView – displays a 6x7 grid calendar for month view, uses CalendarCell for each day.
 
-CalendarView.tsx    Main container managing navigation, mode switching, and event state.            
-MonthView.tsx       Displays days of the current month with event previews.                         
-WeekView.tsx        Displays the week timeline with hours, events, and a dynamic “Now” line.        
-EventModal.tsx      Modal to add, edit, or delete events.                                           
-primitives          Reusable low-level UI components (Button, Modal, Select) for consistent design. 
-hooks               Custom hooks to encapsulate logic like event management and interactions.  
+WeekView – displays days as columns with hourly time slots, supports events per day.
 
-⚙️Technologies Used
+CalendarCell – represents each day in MonthView, shows events and allows quick-add.
 
-React 18 + TypeScript
+EventModal – modal for creating/editing events.
+Hooks such as useCalendar and useEventManager manage state and event handling. Tailwind CSS handles styling and responsiveness.
 
-Tailwind CSS (custom config)
+## Features
 
-Lucide-react (icons)
+ Month/Week views
 
-Storybook for UI testing
+ Event management (create, edit, delete)
 
-Vite or Next.js compatible structure     
+ Responsive design (mobile & desktop)
 
+ Keyboard accessibility (drag & interaction support)
+
+## Storybook Stories
+
+CalendarView / Default
+
+CalendarView / Month View
+
+CalendarView / Week View
+
+CalendarCell / Default
+
+EventModal / Create Event
+
+EventModal / Edit Event
+
+## Technologies
+
+React + TypeScript
+
+Tailwind CSS
+
+Storybook
+
+## Contact
+tolaanbesu927@gmail.com

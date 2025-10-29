@@ -1,4 +1,3 @@
-"use client";
 import React, { memo, useCallback } from "react";
 import { ChevronLeft, ChevronRight, Plus, Loader2, CalendarIcon } from "lucide-react";
 

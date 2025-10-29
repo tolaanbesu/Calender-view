@@ -11,10 +11,6 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "baseUrl": "src",
-    "paths": {
-      "@/*": ["*"]
-    }
   },
   "include": [
     "src",
@@ -24,10 +20,3 @@
 }
 
 
-// {
-//   "files": [],
-//   "references": [
-//     { "path": "./tsconfig.app.json" },
-//     { "path": "./tsconfig.node.json" }
-//   ]
-// }

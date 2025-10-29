@@ -1,4 +1,3 @@
-// src/components/Calendar/CalendarCell.tsx
 import React from "react";
 import { CalendarCellProps } from "./CalendarView.types";
 
