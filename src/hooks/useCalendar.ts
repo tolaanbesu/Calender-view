@@ -46,7 +46,7 @@ export const useCalendar = (initialDate: Date = new Date()) => {
       return format(currentDate, "MMMM yyyy");
     }
     const start = startOfWeek(currentDate); 
-  const end = endOfWeek(currentDate);
+    const end = endOfWeek(currentDate);
 
   const startOfWeekStr = format(start, "MMM d");
   const endOfWeekStr = format(end, "MMM d, yyyy");
