@@ -5,6 +5,8 @@ import {
   addWeeks,
   subWeeks,
   format,
+  startOfWeek, 
+  endOfWeek
 } from "../utils/date.utils";
 import { ViewMode } from "../components/Calendar/CalendarView.types";
 
@@ -43,11 +45,13 @@ export const useCalendar = (initialDate: Date = new Date()) => {
     if (viewMode === "month") {
       return format(currentDate, "MMMM yyyy");
     }
-    const start = subWeeks(currentDate, 0);
-    const end = addWeeks(start, 1);
-    const startOfWeek = format(start, "MMM d");
-    const endOfWeek = format(end, "MMM d, yyyy");
-    return `${startOfWeek} - ${endOfWeek}`;
+    const start = startOfWeek(currentDate); 
+  const end = endOfWeek(currentDate);
+
+  const startOfWeekStr = format(start, "MMM d");
+  const endOfWeekStr = format(end, "MMM d, yyyy");
+
+    return `${startOfWeekStr} - ${endOfWeekStr}`;
   }, [currentDate, viewMode]);
 
   return {
